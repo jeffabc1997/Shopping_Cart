@@ -1,0 +1,11 @@
+
+{% block content %}
+  <h2>註冊帳戶</h2>
+  <form action "." method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">註冊</button>
+  </form>
+  <p>已經有帳號？ <a href="/login/">點此登入</a></p>
+  <p>直接購物! <a href="/index/">點此消費</a></p>
+{% endblock %}

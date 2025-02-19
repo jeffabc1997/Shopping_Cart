@@ -28,4 +28,7 @@ urlpatterns = [
     path('cartorder/', views.cartorder),
     path('cartok/', views.cartok),
     path('cartordercheck/', views.cartordercheck),
+    path('login/', views.login),
+    path('logout/', views.logout),
+    path('register/', views.register, name='register'),
 ]

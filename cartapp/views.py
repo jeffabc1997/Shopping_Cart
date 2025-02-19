@@ -3,6 +3,10 @@ from cartapp import models
 from smtplib import SMTP, SMTPAuthenticationError, SMTPException
 from email.mime.text import MIMEText
 
+from django.contrib.auth import authenticate
+from django.contrib import auth
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 message = ''
 cartlist = []  #購買商品串列
 customname = ''  #購買者姓名
@@ -18,6 +22,10 @@ def index(request):
 		cartlist = []
 	cartnum = len(cartlist)  #購買商品筆數
 	productall = models.ProductModel.objects.all()  #取得資料庫所有商品
+	if request.user.is_authenticated:
+	   name = request.user.username
+	else:
+	   name = '最優質的顧客'
 	return render(request, "index.html", locals())
 
 def detail(request, productid=None):  #商品詳細頁面
@@ -82,6 +90,7 @@ def cartorder(request):  #按我要結帳鈕
 	customaddress1 = customaddress
 	customemail1 = customemail
 	message1 = message
+
 	return render(request, "cartorder.html", locals())
 
 def cartok(request):  #按確認購買鈕
@@ -148,3 +157,43 @@ def send_simple_message(mailfrom, mailpw, mailto, mailsubject, mailcontent): #�
 	except:
 		message = "郵件發送產生錯誤！"
 	server.quit() #關閉連線
+
+def login(request):
+	if request.user.is_authenticated:
+		return redirect('/index/')
+	if request.method == 'POST':
+		name = request.POST['username']
+		password = request.POST['password']
+		user = authenticate(username=name, password=password)
+		print(cartlist)
+		if user is not None:
+			if user.is_active:
+				auth.login(request,user)
+				request.session['cartlist'] = cartlist
+				return redirect('/index/')
+				message = '登入成功！'
+			else:
+				message = '帳號尚未啟用！'
+		else:
+			message = '登入失敗！'
+	return render(request, "login.html", locals())
+	
+def logout(request):
+	# backup_cart = request.session.get("cartlist", []) # TODO 綁定購物車的資訊給某個使用者
+	# request.session["cart_backup"] = backup_cart
+	# request.session["cartlist"] = backup_cart
+	auth.logout(request)
+	return redirect('/index/')	
+
+def register(request):
+    if request.user.is_authenticated:
+        return redirect('/index/')	
+    elif request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            # login(request, user)  # 註冊後自動登入
+            return redirect('/login/')  # 導回購物頁面
+    else:
+        form = UserCreationForm()
+    return render(request, 'register.html', {'form': form})

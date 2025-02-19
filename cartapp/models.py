@@ -9,6 +9,8 @@ class ProductModel(models.Model):
         return self.pname
         
 class OrdersModel(models.Model):
+    # order_id = models.IntegerField(default=0)
+    # order_date = models.DateTimeField(default='2020-01-01 00:00:00')
     subtotal = models.IntegerField(default=0)
     shipping = models.IntegerField(default=0)
     grandtotal = models.IntegerField(default=0)
@@ -18,7 +20,7 @@ class OrdersModel(models.Model):
     customphone =  models.CharField(max_length=100, default='')
     paytype =  models.CharField(max_length=50, default='')
     def __str__(self):
-        return self.customname
+        return "訂單編號: " + str(self.id) + ", " + self.customname
      
 class DetailModel(models.Model):
     dorder = models.ForeignKey('OrdersModel', on_delete=models.CASCADE)
