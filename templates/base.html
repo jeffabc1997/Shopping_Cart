@@ -19,7 +19,7 @@
           <div class="sidemenu">資訊中心</div>
           <ul>
             {% if request.user.is_authenticated %}
-    	歡迎光臨:{{name}}
+    	歡迎光臨:{{request.user.username}}
         <p><a href="/logout/">登出</a></p>
     {% else %}
         <p>您尚未登入喔~</p>

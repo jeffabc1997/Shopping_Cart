@@ -21,7 +21,8 @@ def index(request):
 	else:  #重新購物
 		cartlist = []
 	cartnum = len(cartlist)  #購買商品筆數
-	productall = models.ProductModel.objects.all()  #取得資料庫所有商品
+	# productall = models.ProductModel.objects.all()  #取得資料庫所有商品
+	productall = models.ProductModel.objects.filter(id__in=[3,4,6,10])
 	if request.user.is_authenticated:
 	   name = request.user.username
 	else:
@@ -85,7 +86,12 @@ def cartorder(request):  #按我要結帳鈕
 	for unit in cartlist:  #計算商品總金額
 		total += int(unit[3])
 	grandtotal = total + 100
-	customname1 = customname  ##以區域變數傳給模版
+	# get user info
+	if request.user.is_authenticated:
+		customname = request.user.username
+		customemail = request.user.email
+		customname1 = customname
+	# customname1 = customname  ##以區域變數傳給模版
 	customphone1 = customphone
 	customaddress1 = customaddress
 	customemail1 = customemail
@@ -115,12 +121,12 @@ def cartok(request):  #按確認購買鈕
 			total = int(unit[1]) * int(unit[2])
 			unitdetail = models.DetailModel.objects.create(dorder=unitorder, pname=unit[0], unitprice=unit[1], quantity=unit[2], dtotal=total)
 		orderid = unitorder.id  #取得訂單id
-		mailfrom="你的gmail帳號"  #帳號
-		mailpw="你的gmail密碼"  #密碼
+		# mailfrom="你的gmail帳號"  #帳號
+		# mailpw="你的gmail密碼"  #密碼
 		mailto=customemail  #收件者
 		mailsubject="織夢數位購物網-訂單通知";  #郵件標題
 		mailcontent = "感謝您的光臨，您已經成功的完成訂購程序。\n我們將儘快把您選購的商品郵寄給您！ 再次感謝您支持\n您的訂單編號為：" + str(orderid) + "，您可以使用這個編號回到網站中查詢訂單的詳細內容。\n織夢數位購物網" #郵件內容
-		send_simple_message(mailfrom, mailpw, mailto, mailsubject, mailcontent)  #寄信
+		send_simple_message(mailto, mailsubject, mailcontent)  #寄信
 		cartlist = []
 		request.session['cartlist'] = cartlist
 		return render(request, "cartok.html", locals())
@@ -138,11 +144,20 @@ def cartordercheck(request):  #查詢訂單
 			details = models.DetailModel.objects.filter(dorder=order)
 	return render(request, "cartordercheck.html", locals())
 
-def send_simple_message(mailfrom, mailpw, mailto, mailsubject, mailcontent): #寄信
+import os
+from django.conf import settings
+def send_simple_message(mailto, mailsubject, mailcontent): #寄信
 	global message
 	strSmtp = "smtp.gmail.com:587"  #主機
-	strAccount = mailfrom  #帳號
-	strPassword = mailpw  #密碼
+	# read the email and password from send_pass.txt
+	file1 = open(os.path.join(settings.BASE_DIR, "static", "send_pass.txt"), 'r')
+	list1 = file1.read().splitlines() # list1 裡面的每一個element就是file內的每一行內容，
+
+	strAccount = list1[0]  #帳號
+	strPassword = list1[1]  #密碼
+
+	# strAccount = mailfrom  #帳號
+	# strPassword = mailpw  #密碼
 	msg = MIMEText(mailcontent)
 	msg["Subject"] = mailsubject  #郵件標題
 	mailto1 = mailto  #收件者
@@ -165,7 +180,7 @@ def login(request):
 		name = request.POST['username']
 		password = request.POST['password']
 		user = authenticate(username=name, password=password)
-		print(cartlist)
+		# print(cartlist)
 		if user is not None:
 			if user.is_active:
 				auth.login(request,user)
@@ -179,9 +194,6 @@ def login(request):
 	return render(request, "login.html", locals())
 	
 def logout(request):
-	# backup_cart = request.session.get("cartlist", []) # TODO 綁定購物車的資訊給某個使用者
-	# request.session["cart_backup"] = backup_cart
-	# request.session["cartlist"] = backup_cart
 	auth.logout(request)
 	return redirect('/index/')	
 
