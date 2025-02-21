@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-  <div id="maindiv">
+  <!-- <div id="maindiv">
     {% if cartnum == 0 %}
       <div class="message"> 您的購物車是空的！</div>
     {% endif %}
@@ -18,5 +18,39 @@
         </div>
       </div>
     {% endfor %}
-  </div>
+  </div> -->
+
+
+  <div class="product-container">
+    {% for product in productall %}
+        <div class="products">
+            
+            <a href="/detail/{{product.id}}"><img src="/static/images/{{product.pimages}}" alt="產品詳細資料" width="135" height="135" border="0" /></a>
+            <br>
+            <a href="/detail/{{product.id}}">{{product.pname}}</a>
+                <p>${{product.pprice}}</p> <br>
+
+              <a href="/addtocart/add/{{product.id}}/"><img src="{% static "images/icon_cart.png" %}" height="27" border="0" /></a>
+        </div>
+    {% endfor %}
+</div>
+<style>
+    body {
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    .product-container {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: 100vh;
+        flex-wrap: wrap;  /* Allows wrapping if there are too many products */
+        gap: 200px; /* Adds space between products */
+    }
+    .img {
+        width: 60%;
+        border-radius: 50px;
+    }
+</style>
 {% endblock %}

@@ -7,7 +7,7 @@
       {% csrf_token %}
       <p class="title">確定訂單內容</p>
       <p class="subject">購物清單</p>
-      <table width="90%" border="0" align="center" cellpadding="4" cellspacing="0">
+      <table class="cart-table" width="90%" border="0" align="center" cellpadding="4" cellspacing="0">
         <tr>
           <th align="center"><strong>商品名稱</strong></th>
           <th width="80" align="center"><strong>單價</strong></th>
@@ -22,39 +22,39 @@
           <td width="100" align="center" bgcolor="#FFFFFF"><strong>$ {{unit.3}}</strong></td>
         </tr>
         {% endfor %}
-        <tr>
-          <td colspan="3" align="left" bgcolor="#FFFFFF" class="upline"><strong>小計</strong></td>
-          <td align="center" bgcolor="#FFFFFF" class="upline"> $ {{total}}</td>
+        <tr class="summary-row">
+          <td colspan="3" align="left"  class="upline"><strong>小計</strong></td>
+          <td align="center"  class="upline"> $ {{total}}</td>
         </tr>
-        <tr>
-          <td colspan="3" align="left" bgcolor="#FFFFFF" class="upline"><strong>運費</strong> (固定運費 100 元) </td>
-          <td width="100" align="center" bgcolor="#FFFFFF" class="upline">$ 100</td>
+        <tr class="summary-row">
+          <td colspan="3" align="left"  class="upline"><strong>運費</strong> (固定運費 100 元) </td>
+          <td width="100" align="center"  class="upline">$ 100</td>
         </tr>
-        <tr>
-          <td colspan="3" align="left" bgcolor="#FFFFFF"><strong>總計</strong></td>
-          <td align="center" bgcolor="#FFFFFF"><strong><font color="#FF0000">$ {{grandtotal}}</font></strong></td>
+        <tr class="summary-row">
+          <td colspan="3" align="left" ><strong>總計</strong></td>
+          <td align="center" ><strong><font color="#FF0000">$ {{grandtotal}}</font></strong></td>
         </tr>
       </table>
       <p class="subject">客戶資訊</p>
-      <table width="90%" border="0" align="center" cellpadding="4" cellspacing="0">
+      <table class="cart-table" width="90%" border="0" align="center" cellpadding="4" cellspacing="0">
         <tr>
           <th width="100" align="center">資訊</th>
           <th>內容</th>
         </tr>
         <tr>
-          <td width="100" align="center" bgcolor="#FFFFFF"><strong>姓名</strong></td>
+          <td width="100" align="left" bgcolor="#FFFFFF"><strong>姓名</strong></td>
           <td bgcolor="#FFFFFF"><input name="CustomerName" type="text" class="normalinput" id="CustomerName" value="{{customname1}}" required/></td>
         </tr>
         <tr>
-          <td width="100" align="center" bgcolor="#FFFFFF"><strong>聯絡電話</strong></td>
+          <td width="100" align="left" bgcolor="#FFFFFF"><strong>聯絡電話</strong></td>
           <td bgcolor="#FFFFFF"><input name="CustomerPhone" type="text" class="normalinput" id="CustomerPhone" value="{{customphone1}}" required/></td>
         </tr>
         <tr>
-          <td align="center" bgcolor="#FFFFFF"><strong>住址</strong></td>
+          <td align="left" bgcolor="#FFFFFF"><strong>住址</strong></td>
           <td bgcolor="#FFFFFF"><input name="CustomerAddress" type="text" class="normalinput" id="CustomerAddress" size="40" value="{{customaddress1}}" required/></td>
         </tr>
         <tr>
-          <td align="center" bgcolor="#FFFFFF"><strong>電子郵件</strong></td>
+          <td align="left" bgcolor="#FFFFFF"><strong>電子郵件</strong></td>
           <td bgcolor="#FFFFFF"><input name="CustomerEmail" type="text" class="normalinput" id="CustomerEmail" value="{{customemail1}}" required/></td>
         </tr>
         <tr>
@@ -68,32 +68,97 @@
       <div style="clear:both"></div>
       <table border="0" align="center" cellpadding="10" cellspacing="0">
         <tr>
-          <td><input type="button" name="button1" value="繼續購物" onclick="window.location='/index/'" /></td>
-          <td><input type="button" name="button2" value="修改購物車內容" onclick="window.location='/cart/'" /></td>
-          <!-- <td><input type="submit" name="Submit" value="確認購買" /></td> -->
+          <td><input type="button" name="button1" value="繼續購物" onclick="window.location='/index/'" class="btn"/></td>
+          <td><input type="button" name="button2" value="修改購物車內容" onclick="window.location='/cart/'" class="btn btn-danger"/></td>
+          <td><input type="submit" name="Submit" value="確認購買"class="btn btn-primary" /></td>
         </tr>
       </table>
       <span style="color:red">{{message1}}</span>
     </form>
-    
+    <div class="products" style="display: flex; justify-content: center; margin-top: 20px;">
+
+      {{paypal.render}}
+    </div>  
   </div>
-  <div class="product-container">
-      <div class="products">
-          <!-- <img class="img" src="{{product.image}}" alt="">
-          <p>{{product.name}}</p>
-          <p>Price: $ {{product.price}}</p>
-          <p>Description: {{product.description}}</p> -->
-          <!-- <button>Purchase</button> -->
-          {{paypal.render}}
-      </div>  
-  </div>
+  <!-- <div class="product-container">
+      
+  </div> -->
   <style>
-    .product-container {
+    /* .product-container {
       display: flex;
       flex-direction: row;
       width: 100%;
       height: 100vh;
-  }
-  
+    } */
+    #maindiv {
+        max-width: 600px; /* Reduce form width */
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+    }
+    .cart-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    .cart-table th, .cart-table td {
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .cart-table th {
+        background-color: #8dd378;
+        color: white;
+    }
+
+    .cart-table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+    .summary-row {
+        background-color: #e9ecef;
+        font-weight: bold;
+    }
+
+    .summary-total {
+        background-color: #ffebcc;
+        font-weight: bold;
+    }
+    .button-container {
+        text-align: center;
+    }
+
+    .btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: white;
+        cursor: pointer;
+        margin: 5px;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+    .btn-primary {
+        background-color: #28a745;
+    }
+
+    .btn-primary:hover {
+        background-color: #218838;
+    }
   </style>
 {% endblock %}
