@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from cartapp import views
 
 urlpatterns = [
@@ -31,4 +31,8 @@ urlpatterns = [
     path('login/', views.login),
     path('logout/', views.logout),
     path('register/', views.register, name='register'),
+    path('paypal/', include('paypal.standard.ipn.urls')),
+    path('payment-success/<int:product_id>/', views.PaymentSuccessful, name='payment-success'),
+    path('payment-failed/<int:product_id>/', views.paymentFailed, name='payment-failed'),
+
 ]

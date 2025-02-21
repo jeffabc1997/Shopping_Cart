@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cartapp',
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,8 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+PAYPAL_RECEIVER_EMAIL = 'sb-bir5437936626@business.example.com' # your paypal email
+PAYPAL_CLIENT_ID = "AULEgiih6QEumZvROtAFBggoKqWLT7hlyBk9RECs7n6yCWa9hHi2k1woHXTL4be7Yxr4tT0zz8I6eD-D"
+PAYPAL_SECRET = "EHnqEI2qSZLXLekBicGBLTkEbArkL8nwhfG4P_CzArN-cli9ZoB9Q7BiBMQRG6xdbQ_y4b6ddSzq_JOy"
+PAYPAL_TEST = True # False if you want to use live paypal

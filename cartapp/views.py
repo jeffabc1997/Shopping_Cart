@@ -7,6 +7,12 @@ from django.contrib.auth import authenticate
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+
+from paypal.standard.forms import PayPalPaymentsForm
+from django.conf import settings
+import uuid
+from django.urls import reverse
+
 message = ''
 cartlist = []  #購買商品串列
 customname = ''  #購買者姓名
@@ -97,6 +103,29 @@ def cartorder(request):  #按我要結帳鈕
 	customemail1 = customemail
 	message1 = message
 
+	host = request.get_host()
+	total_price = 0
+	# print(f"http://{host}{reverse('payment-success')}")
+	for unit in cartlist:  # 記錄總價格
+		total_price += int(unit[1]) * int(unit[2])
+	paypal_checkout = {
+		'business': settings.PAYPAL_RECEIVER_EMAIL,
+		'amount': total_price,
+		'item_name': "Good_item",
+		'invoice': uuid.uuid4(),
+		'currency_code': 'NTD',
+		'notify_url': f"http://{host}{reverse('paypal-ipn')}",
+		'return_url': f"http://{host}{reverse('payment-success', kwargs = {'product_id': 1})}",
+		'cancel_url': f"http://{host}{reverse('payment-failed', kwargs = {'product_id': 1})}",
+	}
+
+	paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
+
+	# context = {
+		# 'product': product,
+	# 	'paypal': paypal_payment
+	# }
+	paypal = paypal_payment
 	return render(request, "cartorder.html", locals())
 
 def cartok(request):  #按確認購買鈕
@@ -121,14 +150,16 @@ def cartok(request):  #按確認購買鈕
 			total = int(unit[1]) * int(unit[2])
 			unitdetail = models.DetailModel.objects.create(dorder=unitorder, pname=unit[0], unitprice=unit[1], quantity=unit[2], dtotal=total)
 		orderid = unitorder.id  #取得訂單id
-		# mailfrom="你的gmail帳號"  #帳號
-		# mailpw="你的gmail密碼"  #密碼
+
+		## 寄送訂單通知郵件
 		mailto=customemail  #收件者
 		mailsubject="織夢數位購物網-訂單通知";  #郵件標題
 		mailcontent = "感謝您的光臨，您已經成功的完成訂購程序。\n我們將儘快把您選購的商品郵寄給您！ 再次感謝您支持\n您的訂單編號為：" + str(orderid) + "，您可以使用這個編號回到網站中查詢訂單的詳細內容。\n織夢數位購物網" #郵件內容
 		send_simple_message(mailto, mailsubject, mailcontent)  #寄信
+		##
 		cartlist = []
 		request.session['cartlist'] = cartlist
+
 		return render(request, "cartok.html", locals())
 
 def cartordercheck(request):  #查詢訂單
@@ -209,3 +240,16 @@ def register(request):
     else:
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
+
+def PaymentSuccessful(request, product_id):
+	# productall = models.ProductModel.objects.filter(id__in=[3,4,6,10])
+    # product =  models.ProductModel.objects.get(id=3)
+
+    return render(request, 'payment-success.html', {'product': 3})
+
+def paymentFailed(request, product_id):
+
+    # product =  models.ProductModel.objects.get(id=4)
+
+    return render(request, 'payment-failed.html', {'product': 4})
+
