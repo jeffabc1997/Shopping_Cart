@@ -70,10 +70,30 @@
         <tr>
           <td><input type="button" name="button1" value="繼續購物" onclick="window.location='/index/'" /></td>
           <td><input type="button" name="button2" value="修改購物車內容" onclick="window.location='/cart/'" /></td>
-          <td><input type="submit" name="Submit" value="確認購買" /></td>
+          <!-- <td><input type="submit" name="Submit" value="確認購買" /></td> -->
         </tr>
       </table>
       <span style="color:red">{{message1}}</span>
     </form>
+    
   </div>
+  <div class="product-container">
+      <div class="products">
+          <!-- <img class="img" src="{{product.image}}" alt="">
+          <p>{{product.name}}</p>
+          <p>Price: $ {{product.price}}</p>
+          <p>Description: {{product.description}}</p> -->
+          <!-- <button>Purchase</button> -->
+          {{paypal.render}}
+      </div>  
+  </div>
+  <style>
+    .product-container {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100vh;
+  }
+  
+  </style>
 {% endblock %}
