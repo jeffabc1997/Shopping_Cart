@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - sqlite_data:/app/db.sqlite3  # Persist database file
+
+volumes:
+  sqlite_data:

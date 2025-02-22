@@ -1,3 +1,4 @@
 *_pycache_*
 .DS_Store
 static/send_pass.txt
+venvFile/*
