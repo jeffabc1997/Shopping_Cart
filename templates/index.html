@@ -25,7 +25,7 @@
     {% for product in productall %}
         <div class="products">
             
-            <a href="/detail/{{product.id}}"><img src="/static/images/{{product.pimages}}" alt="產品詳細資料" width="135" height="135" border="0" /></a>
+            <a href="/detail/{{product.id}}"><img src="/static/images/{{product.pimages}}" alt="產品詳細資料" width="200" height="200" border="0" /></a>
             <br>
             <a href="/detail/{{product.id}}">{{product.pname}}</a>
                 <p>${{product.pprice}}</p> <br>
@@ -48,9 +48,16 @@
         flex-wrap: wrap;  /* Allows wrapping if there are too many products */
         gap: 200px; /* Adds space between products */
     }
-    .img {
+    /* .img {
         width: 60%;
         border-radius: 50px;
+    } */
+    .product-container img {
+      max-width: 200px;
+      max-height: 200px;
+      width: auto;
+      height: auto;
+      display: block;
     }
 </style>
 {% endblock %}
