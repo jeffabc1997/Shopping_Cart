@@ -42,27 +42,27 @@
           <th>內容</th>
         </tr>
         <tr>
-          <td width="100" align="left" bgcolor="#FFFFFF"><strong>姓名</strong></td>
-          <td bgcolor="#FFFFFF"><input name="CustomerName" type="text" class="normalinput" id="CustomerName" value="{{customname1}}" required/></td>
+          <td width="100" align="left" bgcolor="#FFFFFF"><strong>姓名 </strong></td>
+          <td bgcolor="#FFFFFF">{{ form.name }}</td>
         </tr>
         <tr>
           <td width="100" align="left" bgcolor="#FFFFFF"><strong>聯絡電話</strong></td>
-          <td bgcolor="#FFFFFF"><input name="CustomerPhone" type="text" class="normalinput" id="CustomerPhone" value="{{customphone1}}" required/></td>
+          <td bgcolor="#FFFFFF">{{form.phone}} </td>
         </tr>
         <tr>
           <td align="left" bgcolor="#FFFFFF"><strong>住址</strong></td>
-          <td bgcolor="#FFFFFF"><input name="CustomerAddress" type="text" class="normalinput" id="CustomerAddress" size="40" value="{{customaddress1}}" required/></td>
+          <td bgcolor="#FFFFFF">{{form.address}}</td>
         </tr>
         <tr>
           <td align="left" bgcolor="#FFFFFF"><strong>電子郵件</strong></td>
-          <td bgcolor="#FFFFFF"><input name="CustomerEmail" type="text" class="normalinput" id="CustomerEmail" value="{{customemail1}}" required/></td>
+          <td bgcolor="#FFFFFF">{{form.email}}</td>
         </tr>
         <tr>
-          <td align="center" bgcolor="#FFFFFF"><strong>付款方式</strong></td>
+          <!-- <td align="center" bgcolor="#FFFFFF"><strong>付款方式</strong></td>
           <td bgcolor="#FFFFFF"><input name="paytype" type="radio" value="ATM 轉帳" checked="checked" />
             ATM 轉帳
             <input name="paytype" type="radio" value="郵政劃撥" />
-            郵政劃撥</td>
+            郵政劃撥</td> -->
         </tr>
       </table>
       <div style="clear:both"></div>
@@ -71,11 +71,12 @@
           <td><input type="button" name="button1" value="繼續購物" onclick="window.location='/index/'" class="btn"/></td>
           <td><input type="button" name="button2" value="修改購物車內容" onclick="window.location='/cart/'" class="btn btn-danger"/></td>
           <td><input type="submit" name="Submit" value="確認購買"class="btn btn-primary" /></td>
+          <!-- <td>{{paypal.render}}</td> -->
         </tr>
       </table>
       <span style="color:red">{{message1}}</span>
     </form>
-    <div class="products" style="display: flex; justify-content: center; margin-top: 20px;">
+    <div class="products" style="display: flex; justify-content: center; margin-top: 20px;"> 
 
       {{paypal.render}}
     </div>  

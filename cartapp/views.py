@@ -84,7 +84,7 @@ def addtocart(request, ctype=None, productid=None):
 		del cartlist[int(productid)]  #從購物車串列中移除商品
 		request.session['cartlist'] = cartlist
 		return redirect('/cart/')
-
+from .forms import CustomerInfoForm
 def cartorder(request):  #按我要結帳鈕
 	global cartlist, message, customname, customphone, customaddress, customemail
 	cartlist1 = cartlist
@@ -97,6 +97,8 @@ def cartorder(request):  #按我要結帳鈕
 		customname = request.user.username
 		customemail = request.user.email
 		customname1 = customname
+	else:
+		customname1 = ''
 	# customname1 = customname  ##以區域變數傳給模版
 	customphone1 = customphone
 	customaddress1 = customaddress
@@ -110,10 +112,10 @@ def cartorder(request):  #按我要結帳鈕
 		total_price += int(unit[1]) * int(unit[2])
 	paypal_checkout = {
 		'business': settings.PAYPAL_RECEIVER_EMAIL,
-		'amount': total_price,
+		'amount': 19876,
 		'item_name': "Good_item",
-		'invoice': uuid.uuid4(),
-		'currency_code': 'NTD',
+		'invoice': "100", # TODO need to change
+		'currency_code': 'TWD',
 		'notify_url': f"http://{host}{reverse('paypal-ipn')}",
 		'return_url': f"http://{host}{reverse('payment-success', kwargs = {'product_id': 1})}",
 		'cancel_url': f"http://{host}{reverse('payment-failed', kwargs = {'product_id': 1})}",
@@ -126,41 +128,49 @@ def cartorder(request):  #按我要結帳鈕
 	# 	'paypal': paypal_payment
 	# }
 	paypal = paypal_payment
+
+	form = CustomerInfoForm(initial={'name': customname1, 'phone': customphone1, 'address': customaddress1, 'email': customemail1, 'paytype': '測試'}) # 表單會有預設值
 	return render(request, "cartorder.html", locals())
 
 def cartok(request):  #按確認購買鈕
-	global cartlist, message, customname, customphone, customaddress, customemail
-	total = 0
-	for unit in cartlist:
-		total += int(unit[3])
-	grandtotal = total + 100
-	message = ''
-	customname = request.POST.get('CustomerName', '')
-	customphone = request.POST.get('CustomerPhone', '')
-	customaddress = request.POST.get('CustomerAddress', '')
-	customemail = request.POST.get('CustomerEmail', '')
-	paytype = request.POST.get('paytype', '')
-	customname1 = customname
-	if customname=='' or customphone=='' or customaddress=='' or customemail=='':
-		message = '姓名、電話、住址及電子郵件皆需輸入'
-		return redirect('/cartorder/')
-	else:
-		unitorder = models.OrdersModel.objects.create(subtotal=total, shipping=100, grandtotal=grandtotal, customname=customname, customphone=customphone, customaddress=customaddress, customemail=customemail, paytype=paytype) #建立訂單
-		for unit in cartlist:  #將購買商品寫入資料庫
-			total = int(unit[1]) * int(unit[2])
-			unitdetail = models.DetailModel.objects.create(dorder=unitorder, pname=unit[0], unitprice=unit[1], quantity=unit[2], dtotal=total)
-		orderid = unitorder.id  #取得訂單id
+	if request.method == 'POST':  #取得購買者資料
+		global cartlist, message, customname, customphone, customaddress, customemail
+		
+		# customphone = request.POST.get('CustomerPhone', '')
+		# customaddress = request.POST.get('CustomerAddress', '')
+		# customemail = request.POST.get('CustomerEmail', '')
+		# paytype = request.POST.get('paytype', '')
+		form = CustomerInfoForm(request.POST)
+		if form.is_valid():
+			total = 0
+			for unit in cartlist:
+				total += int(unit[3])
+			grandtotal = total + 100
 
-		## 寄送訂單通知郵件
-		mailto=customemail  #收件者
-		mailsubject="織夢數位購物網-訂單通知";  #郵件標題
-		mailcontent = "感謝您的光臨，您已經成功的完成訂購程序。\n我們將儘快把您選購的商品郵寄給您！ 再次感謝您支持\n您的訂單編號為：" + str(orderid) + "，您可以使用這個編號回到網站中查詢訂單的詳細內容。\n織夢數位購物網" #郵件內容
-		send_simple_message(mailto, mailsubject, mailcontent)  #寄信
-		##
-		cartlist = []
-		request.session['cartlist'] = cartlist
+			customname = form.cleaned_data['name']
+			customphone = form.cleaned_data['phone']
+			customaddress = form.cleaned_data['address']
+			customemail = form.cleaned_data['email']
+			paytype = form.cleaned_data['paytype']
+			unitorder = models.OrdersModel.objects.create(subtotal=total, shipping=100, grandtotal=grandtotal, customname=customname, 
+							customphone=customphone, customaddress=customaddress, customemail=customemail, paytype=paytype) #建立訂單
+			for unit in cartlist:  #將購買商品寫入資料庫
+				total = int(unit[1]) * int(unit[2])
+				unitdetail = models.DetailModel.objects.create(dorder=unitorder, pname=unit[0], unitprice=unit[1], quantity=unit[2], dtotal=total)
+			orderid = unitorder.id  #取得訂單id
 
-		return render(request, "cartok.html", locals())
+			## 寄送訂單通知郵件
+			mailto=customemail  #收件者
+			mailsubject="棒球購物網-訂單通知";  #郵件標題
+			mailcontent = "感謝您的光臨，您已經成功的完成訂購程序。\n我們將儘快把您選購的商品郵寄給您！ 再次感謝您支持\n您的訂單編號為：" + str(orderid) + "，您可以使用這個編號回到網站中查詢訂單的詳細內容。\n棒球購物網" #郵件內容
+			send_simple_message(mailto, mailsubject, mailcontent)  #寄信
+			##
+			cartlist = []
+			request.session['cartlist'] = cartlist
+			return render(request, "cartok.html", locals())
+		else:
+			return redirect('/cartorder/')
+	return redirect('/cartorder/')
 
 def cartordercheck(request):  #查詢訂單
 	orderid = request.GET.get('orderid', '')  #取得輸入id
@@ -200,8 +210,10 @@ def send_simple_message(mailto, mailsubject, mailcontent): #寄信
 		server.sendmail(strAccount, mailto1, msg.as_string())  #寄信
 	except SMTPAuthenticationError:
 		message = "無法登入！"
+		print("無法登入！")
 	except:
 		message = "郵件發送產生錯誤！"
+		print("郵件發送產生錯誤！")
 	server.quit() #關閉連線
 
 def login(request):
