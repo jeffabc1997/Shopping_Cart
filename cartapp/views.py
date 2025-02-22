@@ -28,7 +28,7 @@ def index(request):
 		cartlist = []
 	cartnum = len(cartlist)  #購買商品筆數
 	# productall = models.ProductModel.objects.all()  #取得資料庫所有商品
-	productall = models.ProductModel.objects.filter(id__in=[3,4,6,10])
+	productall = models.ProductModel.objects.filter(pname__contains="Signed")
 	if request.user.is_authenticated:
 		name = request.user.username
 	else:
@@ -72,10 +72,11 @@ def addtocart(request, ctype=None, productid=None):
 		n = 0
 		for unit in cartlist:
 			unit[2] = request.POST.get('qty' + str(n), '1')  #取得數量
+			# print('qty' + str(n))
 			unit[3] = str(int(unit[1]) * int(unit[2]))  #取得總價
 			n += 1
 		request.session['cartlist'] = cartlist
-		return redirect('/cart/')
+		return redirect('/cartorder/')
 	elif ctype == 'empty':  #清空購物車
 		cartlist = []  #設購物車為空串列
 		request.session['cartlist'] = cartlist
@@ -85,11 +86,12 @@ def addtocart(request, ctype=None, productid=None):
 		request.session['cartlist'] = cartlist
 		return redirect('/cart/')
 from .forms import CustomerInfoForm
-def cartorder(request):  #按我要結帳鈕
+def cartorder(request):  #按我要結帳鈕之後的畫面.
 	global cartlist, message, customname, customphone, customaddress, customemail
 	cartlist1 = cartlist
 	total = 0
-	for unit in cartlist:  #計算商品總金額
+	for i, unit in enumerate(cartlist):  #計算商品總金額
+		# print(unit)
 		total += int(unit[3])
 	grandtotal = total + 100
 	# get user info
@@ -98,7 +100,7 @@ def cartorder(request):  #按我要結帳鈕
 		customemail = request.user.email
 		customname1 = customname
 	else:
-		customname1 = ''
+		customname1 = '未登入使用者'
 	# customname1 = customname  ##以區域變數傳給模版
 	customphone1 = customphone
 	customaddress1 = customaddress
@@ -108,7 +110,7 @@ def cartorder(request):  #按我要結帳鈕
 	form = CustomerInfoForm(initial={'name': customname1, 'phone': customphone1, 'address': customaddress1, 'email': customemail1, 'paytype': '測試'}) # 表單會有預設值
 	return render(request, "cartorder.html", locals())
 
-def payment(request): # TODO 先用post (cartok)確認購買者資料，再進行付款
+def payment(request): # 按確認購買之後的畫面. 先用post 確認購買者資料，再進行付款
 	if request.method == 'POST':  #取得購買者資料
 		global cartlist, message, customname, customphone, customaddress, customemail
 		form = CustomerInfoForm(request.POST)
