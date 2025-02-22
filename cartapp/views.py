@@ -159,6 +159,7 @@ def cartordercheck(request):  #查詢訂單
 			notfound = 1
 		else:  #找到符合的資料
 			details = models.DetailModel.objects.filter(dorder=order)
+			# print(details)
 	return render(request, "cartordercheck.html", locals())
 
 import os
@@ -230,19 +231,19 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 def PaymentSuccessful(request, orderid): # TODO 使用cartok的方式在資料庫建立訂單和detail
-
+	global cartlist, customname, customemail
 	unitorder = models.OrdersModel.objects.filter(id=orderid).first()
 	if unitorder is None: #若訂單不存在
 		return redirect('/index/')
 	unitorder.payment_completed = True  #設定付款完成
 	unitorder.save()  #儲存訂單
-	cartlist = []
-	request.session['cartlist'] = cartlist
+	
 	for unit in cartlist:  #將購買商品寫入資料庫
 		total = int(unit[1]) * int(unit[2])
 		unitdetail = models.DetailModel.objects.create(dorder=unitorder, pname=unit[0], unitprice=unit[1], quantity=unit[2], dtotal=total)
-	# orderid = unitorder.id  #取得訂單id
-
+	
+	cartlist = []
+	request.session['cartlist'] = cartlist #清空購物車
 	## 寄送訂單通知郵件
 	mailto=customemail  #收件者
 	mailsubject="棒球購物網-訂單通知";  #郵件標題
@@ -250,7 +251,12 @@ def PaymentSuccessful(request, orderid): # TODO 使用cartok的方式在資料�
 	send_simple_message(mailto, mailsubject, mailcontent)  #寄信
 	##
 
-	# return render(request, "cartok.html", locals())
+	# customname1 = customname
+	context = {
+		'orderid': orderid,
+		'customname1': customname,
+		'mailto': mailto,
+	}
 	return render(request, 'payment-success.html', locals())
 
 def paymentFailed(request, orderid): # TODO 引導回cartorder
