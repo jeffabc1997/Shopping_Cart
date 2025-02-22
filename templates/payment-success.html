@@ -1,4 +1,16 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+  <div id="maindiv">
+    <p class="title">訂購完成</p>
+    <p class="subject">感謝您的訂購！</p>
+    <p class="desc">親愛的 <strong>{{customname1}}</strong> (先生 / 小姐)，您已經成功的完成訂購程序，我們將儘快把您選購的商品郵寄給您！ 再次感謝您支持。<br />
+    <a href="/cartordercheck/?orderid={{orderid}}&customemail={{mailto}}">&lt;詳細內容請按此&gt;</a></p>
+  </div>
+{% endblock %}
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,15 +19,7 @@
 </head>
 <body>
     <h1>Payment successful for product: </h1>
-    <!-- <div class="product-container">
-        <div class="products">
-            <img class="img" src="{{product.image}}" alt="">
-            <p>{{product.name}}</p>
-            <p>Price: $ {{product.price}}</p>
-            <p>Description: {{product.description}}</p>
 
-        </div>  
-    </div> -->
     <style>
         body {
             padding: 10px;
@@ -41,4 +45,4 @@
         }
     </style>
 </body>
-</html>
+</html> -->

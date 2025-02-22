@@ -26,13 +26,15 @@ urlpatterns = [
     path('addtocart/<str:ctype>/<int:productid>/', views.addtocart),
     path('cart/', views.cart),
     path('cartorder/', views.cartorder),
-    path('cartok/', views.cartok),
+    # path('cartok/', views.cartok),
     path('cartordercheck/', views.cartordercheck),
     path('login/', views.login),
     path('logout/', views.logout),
     path('register/', views.register, name='register'),
     path('paypal/', include('paypal.standard.ipn.urls')),
-    path('payment-success/<int:product_id>/', views.PaymentSuccessful, name='payment-success'),
-    path('payment-failed/<int:product_id>/', views.paymentFailed, name='payment-failed'),
+
+    path('payment/', views.payment),
+    path('payment-success/<int:orderid>/', views.PaymentSuccessful, name='payment-success'),
+    path('payment-failed/<int:orderid>/', views.paymentFailed, name='payment-failed'),
 
 ]

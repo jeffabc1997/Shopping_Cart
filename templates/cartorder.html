@@ -3,7 +3,7 @@
 
 {% block content %}
   <div id="maindiv">
-    <form action="/cartok/" method="POST" name="form1" id="form1">
+    <form action="/payment/" method="POST" name="form1" id="form1">
       {% csrf_token %}
       <p class="title">確定訂單內容</p>
       <p class="subject">購物清單</p>
@@ -76,10 +76,7 @@
       </table>
       <span style="color:red">{{message1}}</span>
     </form>
-    <div class="products" style="display: flex; justify-content: center; margin-top: 20px;"> 
-
-      {{paypal.render}}
-    </div>  
+     
   </div>
   <!-- <div class="product-container">
       

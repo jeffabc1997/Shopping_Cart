@@ -18,7 +18,8 @@ class OrdersModel(models.Model):
     customemail =  models.CharField(max_length=100, default='')
     customaddress =  models.CharField(max_length=100, default='')
     customphone =  models.CharField(max_length=100, default='')
-    paytype =  models.CharField(max_length=50, default='')
+    paytype =  models.CharField(max_length=50, default='Paypal')
+    payment_completed = models.BooleanField(default=False)
     def __str__(self):
         return "訂單編號: " + str(self.id) + ", " + self.customname
      

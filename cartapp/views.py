@@ -30,9 +30,9 @@ def index(request):
 	# productall = models.ProductModel.objects.all()  #取得資料庫所有商品
 	productall = models.ProductModel.objects.filter(id__in=[3,4,6,10])
 	if request.user.is_authenticated:
-	   name = request.user.username
+		name = request.user.username
 	else:
-	   name = '最優質的顧客'
+		name = '最優質的顧客'
 	return render(request, "index.html", locals())
 
 def detail(request, productid=None):  #商品詳細頁面
@@ -105,41 +105,12 @@ def cartorder(request):  #按我要結帳鈕
 	customemail1 = customemail
 	message1 = message
 
-	host = request.get_host()
-	total_price = 0
-	# print(f"http://{host}{reverse('payment-success')}")
-	for unit in cartlist:  # 記錄總價格
-		total_price += int(unit[1]) * int(unit[2])
-	paypal_checkout = {
-		'business': settings.PAYPAL_RECEIVER_EMAIL,
-		'amount': 19876,
-		'item_name': "Good_item",
-		'invoice': "100", # TODO need to change
-		'currency_code': 'TWD',
-		'notify_url': f"http://{host}{reverse('paypal-ipn')}",
-		'return_url': f"http://{host}{reverse('payment-success', kwargs = {'product_id': 1})}",
-		'cancel_url': f"http://{host}{reverse('payment-failed', kwargs = {'product_id': 1})}",
-	}
-
-	paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
-
-	# context = {
-		# 'product': product,
-	# 	'paypal': paypal_payment
-	# }
-	paypal = paypal_payment
-
 	form = CustomerInfoForm(initial={'name': customname1, 'phone': customphone1, 'address': customaddress1, 'email': customemail1, 'paytype': '測試'}) # 表單會有預設值
 	return render(request, "cartorder.html", locals())
 
-def cartok(request):  #按確認購買鈕
+def payment(request): # TODO 先用post (cartok)確認購買者資料，再進行付款
 	if request.method == 'POST':  #取得購買者資料
 		global cartlist, message, customname, customphone, customaddress, customemail
-		
-		# customphone = request.POST.get('CustomerPhone', '')
-		# customaddress = request.POST.get('CustomerAddress', '')
-		# customemail = request.POST.get('CustomerEmail', '')
-		# paytype = request.POST.get('paytype', '')
 		form = CustomerInfoForm(request.POST)
 		if form.is_valid():
 			total = 0
@@ -153,21 +124,26 @@ def cartok(request):  #按確認購買鈕
 			customemail = form.cleaned_data['email']
 			paytype = form.cleaned_data['paytype']
 			unitorder = models.OrdersModel.objects.create(subtotal=total, shipping=100, grandtotal=grandtotal, customname=customname, 
-							customphone=customphone, customaddress=customaddress, customemail=customemail, paytype=paytype) #建立訂單
-			for unit in cartlist:  #將購買商品寫入資料庫
-				total = int(unit[1]) * int(unit[2])
-				unitdetail = models.DetailModel.objects.create(dorder=unitorder, pname=unit[0], unitprice=unit[1], quantity=unit[2], dtotal=total)
-			orderid = unitorder.id  #取得訂單id
+							customphone=customphone, customaddress=customaddress, customemail=customemail, paytype=paytype, payment_completed=False) #建立訂單
+			host = request.get_host()
+			total_price = 0
+			# print(f"http://{host}{reverse('payment-success')}")
+			for unit in cartlist:  # 記錄總價格
+				total_price += int(unit[1]) * int(unit[2])
+			paypal_checkout = {
+				'business': settings.PAYPAL_RECEIVER_EMAIL,
+				'amount': total_price,
+				'item_name': "Good_item",
+				'invoice': uuid.uuid4(), # TODO need to change
+				'currency_code': 'TWD',
+				'notify_url': f"http://{host}{reverse('paypal-ipn')}",
+				'return_url': f"http://{host}{reverse('payment-success', kwargs = {'orderid': unitorder.id})}",
+				'cancel_url': f"http://{host}{reverse('payment-failed', kwargs = {'orderid': unitorder.id})}",
+			}
 
-			## 寄送訂單通知郵件
-			mailto=customemail  #收件者
-			mailsubject="棒球購物網-訂單通知";  #郵件標題
-			mailcontent = "感謝您的光臨，您已經成功的完成訂購程序。\n我們將儘快把您選購的商品郵寄給您！ 再次感謝您支持\n您的訂單編號為：" + str(orderid) + "，您可以使用這個編號回到網站中查詢訂單的詳細內容。\n棒球購物網" #郵件內容
-			send_simple_message(mailto, mailsubject, mailcontent)  #寄信
-			##
-			cartlist = []
-			request.session['cartlist'] = cartlist
-			return render(request, "cartok.html", locals())
+			paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
+			paypal = paypal_payment
+			return render(request, 'payment.html', locals())
 		else:
 			return redirect('/cartorder/')
 	return redirect('/cartorder/')
@@ -253,15 +229,33 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
 
-def PaymentSuccessful(request, product_id):
-	# productall = models.ProductModel.objects.filter(id__in=[3,4,6,10])
-    # product =  models.ProductModel.objects.get(id=3)
+def PaymentSuccessful(request, orderid): # TODO 使用cartok的方式在資料庫建立訂單和detail
 
-    return render(request, 'payment-success.html', {'product': 3})
+	unitorder = models.OrdersModel.objects.filter(id=orderid).first()
+	if unitorder is None: #若訂單不存在
+		return redirect('/index/')
+	unitorder.payment_completed = True  #設定付款完成
+	unitorder.save()  #儲存訂單
+	cartlist = []
+	request.session['cartlist'] = cartlist
+	for unit in cartlist:  #將購買商品寫入資料庫
+		total = int(unit[1]) * int(unit[2])
+		unitdetail = models.DetailModel.objects.create(dorder=unitorder, pname=unit[0], unitprice=unit[1], quantity=unit[2], dtotal=total)
+	# orderid = unitorder.id  #取得訂單id
 
-def paymentFailed(request, product_id):
+	## 寄送訂單通知郵件
+	mailto=customemail  #收件者
+	mailsubject="棒球購物網-訂單通知";  #郵件標題
+	mailcontent = "感謝您的光臨，您已經成功的完成訂購程序。\n我們將儘快把您選購的商品郵寄給您！ 再次感謝您支持\n您的訂單編號為：" + str(orderid) + "，您可以使用這個編號回到網站中查詢訂單的詳細內容。\n棒球購物網" #郵件內容
+	send_simple_message(mailto, mailsubject, mailcontent)  #寄信
+	##
+
+	# return render(request, "cartok.html", locals())
+	return render(request, 'payment-success.html', locals())
+
+def paymentFailed(request, orderid): # TODO 引導回cartorder
 
     # product =  models.ProductModel.objects.get(id=4)
 
-    return render(request, 'payment-failed.html', {'product': 4})
+    return render(request, 'payment-failed.html', {'product': orderid})
 
