@@ -76,7 +76,10 @@ def addtocart(request, ctype=None, productid=None):
 			unit[3] = str(int(unit[1]) * int(unit[2]))  #取得總價
 			n += 1
 		request.session['cartlist'] = cartlist
-		return redirect('/cartorder/')
+		if request.POST.get('Update', '') == '繼續購物':
+			return redirect('/index/')
+		else:
+			return redirect('/cartorder/')
 	elif ctype == 'empty':  #清空購物車
 		cartlist = []  #設購物車為空串列
 		request.session['cartlist'] = cartlist
