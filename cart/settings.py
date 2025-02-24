@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-yg3@(tb*d#@*oq+v)2=h9w%dsc66_**^)&3zik$x8gbl)pbx@5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -130,6 +130,4 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 PAYPAL_RECEIVER_EMAIL = 'sb-bir5437936626@business.example.com' # your paypal email
-PAYPAL_CLIENT_ID = "AULEgiih6QEumZvROtAFBggoKqWLT7hlyBk9RECs7n6yCWa9hHi2k1woHXTL4be7Yxr4tT0zz8I6eD-D"
-PAYPAL_SECRET = "EHnqEI2qSZLXLekBicGBLTkEbArkL8nwhfG4P_CzArN-cli9ZoB9Q7BiBMQRG6xdbQ_y4b6ddSzq_JOy"
 PAYPAL_TEST = True # False if you want to use live paypal
