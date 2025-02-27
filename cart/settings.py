@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cartapp',
     'paypal.standard.ipn',
+    'paymentapp.apps.PaymentappConfig',
 ]
 
 MIDDLEWARE = [

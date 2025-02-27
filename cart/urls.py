@@ -33,8 +33,8 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('paypal/', include('paypal.standard.ipn.urls')),
 
-    path('payment/', views.payment),
-    path('payment-success/<int:orderid>/', views.PaymentSuccessful, name='payment-success'),
-    path('payment-failed/<int:orderid>/', views.paymentFailed, name='payment-failed'),
+
+
+    path('paymentapp/', include('paymentapp.urls'), name='paymentapp'),
 
 ]
