@@ -26,3 +26,14 @@ class CustomerInfoForm(forms.Form):
         required=False,
         widget=forms.TextInput(attrs={'placeholder': 'paytype'})
     )
+
+
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+
+class RegistrationForm(UserCreationForm):
+    Email = forms.EmailField(required=True)
+
+    # class Meta:
+    #     model = User
+    #     Fields = ['username', 'email', 'password1', 'password2']
