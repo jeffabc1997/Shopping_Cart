@@ -6,8 +6,8 @@ from django.contrib.auth import authenticate
 from django.contrib import auth
 
 from django.contrib.auth.forms import UserCreationForm
-
-
+from cartapp.forms import RegistrationForm
+from cartapp.forms import CustomerInfoForm
 
 message = ''
 cartlist = []  #購買商品串列
@@ -84,7 +84,7 @@ def addtocart(request, ctype=None, productid=None):
 		del cartlist[int(productid)]  #從購物車串列中移除商品
 		request.session['cartlist'] = cartlist
 		return redirect('/cart/')
-from .forms import CustomerInfoForm
+
 def cartorder(request):  #按我要結帳鈕之後的畫面.
 	global cartlist, message, customname, customphone, customaddress, customemail
 	cartlist1 = cartlist
@@ -155,13 +155,14 @@ def register(request):
     if request.user.is_authenticated:
         return redirect('/index/')	
     elif request.method == "POST":
-        form = UserCreationForm(request.POST)
+        # form = UserCreationForm(request.POST)
+        form = RegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
             # login(request, user)  # 註冊後自動登入
-            return redirect('/login/')  # 導回購物頁面
+            return redirect('/accounts/login/')  # 導回購物頁面
     else:
-        form = UserCreationForm()
+        form = RegistrationForm()
     return render(request, 'register.html', {'form': form})
 
 

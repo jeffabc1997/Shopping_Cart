@@ -16,9 +16,9 @@ cartlist = []  #購買商品串列
 customname = ''  #購買者姓名
 customemail = ''  #購買者電子郵件
 
-from django.http import HttpResponse 
-def paymentapp(request):
-    return HttpResponse('<h1>Payment App</h1>')
+# from django.http import HttpResponse 
+# def paymentapp(request):
+#     return HttpResponse('<h1>Payment App</h1>')
 
 
 def payment(request): # 按確認購買之後的畫面. 先用post 確認購買者資料，再進行付款

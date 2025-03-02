@@ -132,3 +132,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 PAYPAL_RECEIVER_EMAIL = 'sb-bir5437936626@business.example.com' # your paypal email
 PAYPAL_TEST = True # False if you want to use live paypal
+
+# Redirect to home URL after login (Default redirects to /accounts/profile/)
+LOGIN_REDIRECT_URL = '/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'chenyu3618@gmail.com'
+EMAIL_HOST_PASSWORD = 'wlursbobmbxltvrp'
