@@ -8,9 +8,8 @@ import uuid
 from django.urls import reverse
 from cartapp import models
 from cartapp.forms import CustomerInfoForm
-from django.conf import settings
 import os
-
+from cart.password import eMAIL_HOST_USER, eMAIL_HOST_PASSWORD
 message = ''
 cartlist = []  #購買商品串列
 customname = ''  #購買者姓名
@@ -70,8 +69,8 @@ def send_simple_message(mailto, mailsubject, mailcontent): #寄信
 	file1 = open(os.path.join(settings.BASE_DIR, "static", "send_pass.txt"), 'r')
 	list1 = file1.read().splitlines() # list1 裡面的每一個element就是file內的每一行內容，
 
-	strAccount = list1[0]  #帳號
-	strPassword = list1[1]  #密碼
+	strAccount = eMAIL_HOST_USER #list1[0]  #帳號
+	strPassword = eMAIL_HOST_PASSWORD  #密碼
 
 	# strAccount = mailfrom  #帳號
 	# strPassword = mailpw  #密碼
