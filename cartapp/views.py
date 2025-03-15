@@ -125,32 +125,6 @@ def cartordercheck(request):  #查詢訂單
 			# print(details)
 	return render(request, "cartordercheck.html", locals())
 
-import os
-
-def login(request):
-	if request.user.is_authenticated:
-		return redirect('/index/')
-	if request.method == 'POST':
-		name = request.POST['username']
-		password = request.POST['password']
-		user = authenticate(username=name, password=password)
-		# print(cartlist)
-		if user is not None:
-			if user.is_active:
-				auth.login(request,user)
-				request.session['cartlist'] = cartlist
-				return redirect('/index/')
-				message = '登入成功！'
-			else:
-				message = '帳號尚未啟用！'
-		else:
-			message = '登入失敗！'
-	return render(request, "login.html", locals())
-	
-def logout(request):
-	auth.logout(request)
-	return redirect('/index/')	
-
 def register(request):
     if request.user.is_authenticated:
         return redirect('/index/')	

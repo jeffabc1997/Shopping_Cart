@@ -26,10 +26,8 @@ urlpatterns = [
     path('addtocart/<str:ctype>/<int:productid>/', views.addtocart),
     path('cart/', views.cart),
     path('cartorder/', views.cartorder),
-    # path('cartok/', views.cartok),
     path('cartordercheck/', views.cartordercheck),
-    # path('login/', views.login),
-    # path('logout/', views.logout),
+    
     path('register/', views.register, name='register'),
     
     path('accounts/', include('django.contrib.auth.urls')),
