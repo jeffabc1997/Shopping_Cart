@@ -1,26 +1,6 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block content %}
-  <!-- <div id="maindiv">
-    {% if cartnum == 0 %}
-      <div class="message"> 您的購物車是空的！</div>
-    {% endif %}
-    {% for product in productall %}
-      <div class="block_product pro_photo">
-        <div class="pro_photo">
-          <a href="/detail/{{product.id}}"><img src="/static/images/{{product.pimages}}" alt="產品詳細資料" width="135" height="135" border="0" /></a>
-          <div class="pro_name"><a href="/detail/{{product.id}}">{{product.pname}}</a></div>
-          <div class="pro_price">${{product.pprice}}</div>
-          <div class="pro_btn">
-            <a href="/addtocart/add/{{product.id}}/"><img src="{% static "images/icon_cart.png" %}" height="27" border="0" /></a>
-          </div>
-        </div>
-      </div>
-    {% endfor %}
-  </div> -->
-
-
   <div class="product-container">
     {% for product in productall %}
         <div class="products">
@@ -34,30 +14,5 @@
         </div>
     {% endfor %}
 </div>
-<style>
-    body {
-        padding: 10px;
-        box-sizing: border-box;
-    }
 
-    .product-container {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-        height: 100vh;
-        flex-wrap: wrap;  /* Allows wrapping if there are too many products */
-        gap: 200px; /* Adds space between products */
-    }
-    /* .img {
-        width: 60%;
-        border-radius: 50px;
-    } */
-    .product-container img {
-      max-width: 200px;
-      max-height: 200px;
-      width: auto;
-      height: auto;
-      display: block;
-    }
-</style>
 {% endblock %}

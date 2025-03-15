@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'cartapp',
     'paypal.standard.ipn',
     'paymentapp.apps.PaymentappConfig',
+    'baseballapp.apps.BaseballappConfig',
 ]
 
 MIDDLEWARE = [
