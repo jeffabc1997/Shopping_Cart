@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load static %}
 
 {% block script %}
   <script type="text/javascript">
@@ -57,90 +56,5 @@
         </div>
     </form>
 </div>
-
-<style>
-    /* Center the form and limit width */
-    #maindiv {
-        max-width: 600px; /* Reduce form width */
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        background-color: #f9f9f9;
-    }
-
-    /* Improve table styling */
-    .cart-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-    }
-
-    .cart-table th, .cart-table td {
-        padding: 10px;
-        text-align: center;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .cart-table th {
-        background-color: #8dd378;
-        color: white;
-    }
-
-    .cart-table tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    /* Summary row */
-    .summary-row {
-        background-color: #e9ecef;
-        font-weight: bold;
-    }
-
-    .summary-total {
-        background-color: #ffebcc;
-        font-weight: bold;
-    }
-
-    .total-price {
-        color: red;
-        font-size: 1.2em;
-    }
-
-    /* Buttons */
-    .button-container {
-        text-align: center;
-    }
-
-    .btn {
-        padding: 10px 15px;
-        border: none;
-        border-radius: 5px;
-        background-color: #007bff;
-        color: white;
-        cursor: pointer;
-        margin: 5px;
-    }
-
-    .btn:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-danger {
-        background-color: #dc3545;
-    }
-
-    .btn-danger:hover {
-        background-color: #c82333;
-    }
-
-    .btn-primary {
-        background-color: #28a745;
-    }
-
-    .btn-primary:hover {
-        background-color: #218838;
-    }
-</style>
 
 {% endblock %}
