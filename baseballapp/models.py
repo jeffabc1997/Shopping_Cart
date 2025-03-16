@@ -1,10 +1,19 @@
 from django.db import models
 
 # Create your models here.
+class TeamModel(models.Model):
+    name = models.CharField(max_length=50)
+    abbreviation = models.CharField(max_length=5)
+    ops = models.FloatField(default=0)
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default = 0)
 
+    def __str__(self):
+        return self.name
+    
 class PlayerModel(models.Model):
     name = models.CharField(max_length=100)
-    team = models.OneToOneField('TeamModel', on_delete=models.CASCADE, null=True, blank=True)
+    team = models.ForeignKey(TeamModel, on_delete=models.CASCADE)
     position = models.IntegerField(default=0)
     mlbid = models.IntegerField(null=True, blank=True)
 
@@ -27,18 +36,7 @@ class HitterModel(models.Model):
 
     def __str__(self):
         return self.player.name
-    
-
-class TeamModel(models.Model):
-    name = models.CharField(max_length=50)
-    abbreviation = models.CharField(max_length=5)
-    ops = models.FloatField(default=0)
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default = 0)
-
-    def __str__(self):
-        return self.name
-    
+     
 class GameModel(models.Model):
     home_team = models.ForeignKey(TeamModel, on_delete=models.CASCADE, related_name='home_team')
     away_team = models.ForeignKey(TeamModel, on_delete=models.CASCADE, related_name='away_team')
