@@ -6,6 +6,7 @@ class PlayerModel(models.Model):
     name = models.CharField(max_length=100)
     team = models.OneToOneField('TeamModel', on_delete=models.CASCADE, null=True, blank=True)
     position = models.IntegerField(default=0)
+    mlbid = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -34,7 +35,7 @@ class TeamModel(models.Model):
     ops = models.FloatField(default=0)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default = 0)
-    
+
     def __str__(self):
         return self.name
     

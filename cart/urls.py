@@ -27,7 +27,7 @@ urlpatterns = [
     path('cart/', views.cart),
     path('cartorder/', views.cartorder),
     path('cartordercheck/', views.cartordercheck),
-    
+
     path('register/', views.register, name='register'),
     
     path('accounts/', include('django.contrib.auth.urls')),
@@ -36,4 +36,5 @@ urlpatterns = [
 
     path('paymentapp/', include('paymentapp.urls'), name='paymentapp'),
 
+    path('baseballapp/', include('baseballapp.urls'), name='baseballapp'),
 ]
