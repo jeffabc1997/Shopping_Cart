@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load static %}
 {% block content %}
   <div class="product-container">
     {% for product in productall %}
@@ -10,7 +10,7 @@
             <a href="/detail/{{product.id}}">{{product.pname}}</a>
                 <p>${{product.pprice}}</p> <br>
 
-              <a href="/addtocart/add/{{product.id}}/"><img src="{% static "images/icon_cart.png" %}" height="27" border="0" /></a>
+              <a href="/addtocart/add/{{product.id}}/"><img src="{% static 'images/icon_cart.png' %}" height="27" border="0" /></a>
         </div>
     {% endfor %}
 </div>
