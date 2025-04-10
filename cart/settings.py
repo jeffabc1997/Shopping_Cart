@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'paypal.standard.ipn',
     'paymentapp.apps.PaymentappConfig',
     'baseballapp.apps.BaseballappConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +81,7 @@ import os
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db', 'db.sqlite3'), #BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'), #BASE_DIR / 'db.sqlite3',
     }
 }
 

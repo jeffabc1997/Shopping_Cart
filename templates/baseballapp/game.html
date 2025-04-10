@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Information</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'baseballapp/css/styles.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-title">比賽資訊</h1>
+
+            <div class="game-card-container">
+                {% for game in games %}
+                <div class="game-card">
+                    <div class="game-header">
+                        <h2>{{ game.home_team }} vs {{ game.away_team }}</h2>
+                        <h4>{{ game.date }}</h4>
+                    </div>
+                    <div class="game-stats">
+                        <div class="team-info">
+                            <h5 class="home-team">主隊戰績: {{ game.home_team.wins }} 勝 {{ game.home_team.losses }} 敗</h5>
+                        </div>
+                        <div class="team-info">
+                            <h5 class="away-team">客隊戰績: {{ game.away_team.wins }} 勝 {{ game.away_team.losses }} 敗</h5>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

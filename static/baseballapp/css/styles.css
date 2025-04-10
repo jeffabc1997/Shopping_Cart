@@ -1,0 +1,82 @@
+
+    /* General container style */
+.container {
+    margin-top: 50px;
+    padding: 20px;
+}
+
+.page-title {
+    position: absolute;
+    top: 20px;   /* Distance from the top of the screen */
+    left: 20px;  /* Distance from the left side of the screen */
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0;
+}
+/* Game card layout */
+.game-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+/* Individual game card */
+.game-card {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin: 15px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover effect for game cards */
+.game-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Game header styling */
+.game-header h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.game-header h4 {
+    font-size: 1.2rem;
+    color: #888;
+}
+
+/* Team info styling */
+.team-info h5 {
+    font-size: 1.2rem;
+    margin: 5px 0;
+}
+
+/* Home team specific style */
+.home-team {
+    color: #007bff;
+}
+
+/* Away team specific style */
+.away-team {
+    color: #dc3545;
+}
+
+/* Button style */
+.game-link {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+}
+
+.game-link:hover {
+    background-color: #0056b3;
+}
