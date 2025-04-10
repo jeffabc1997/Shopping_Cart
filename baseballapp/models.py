@@ -13,7 +13,7 @@ class TeamModel(models.Model):
     
 class PlayerModel(models.Model):
     name = models.CharField(max_length=100)
-    team = models.ForeignKey(TeamModel, on_delete=models.CASCADE)
+    team = models.ForeignKey(TeamModel, null=True, blank=True, on_delete=models.CASCADE)
     position = models.IntegerField(default=0)
     mlbid = models.IntegerField(null=True, blank=True)
 
@@ -38,10 +38,10 @@ class HitterModel(models.Model):
         return self.player.name
      
 class GameModel(models.Model):
-    home_team = models.ForeignKey(TeamModel, on_delete=models.CASCADE, related_name='home_team')
-    away_team = models.ForeignKey(TeamModel, on_delete=models.CASCADE, related_name='away_team')
-    home_starting_pitcher = models.ForeignKey(PitcherModel, on_delete=models.CASCADE, related_name='home_starting_pitcher')
-    away_starting_pitcher = models.ForeignKey(PitcherModel, on_delete=models.CASCADE, related_name='away_starting_pitcher')
+    home_team = models.ForeignKey(TeamModel, related_name='home_team', on_delete=models.CASCADE)
+    away_team = models.ForeignKey(TeamModel, related_name='away_team', on_delete=models.CASCADE)
+    home_starting_pitcher = models.ForeignKey(PitcherModel, on_delete=models.CASCADE, related_name='home_starting_pitcher', null=True, blank=True)
+    away_starting_pitcher = models.ForeignKey(PitcherModel, on_delete=models.CASCADE, related_name='away_starting_pitcher', null=True, blank=True)
     home_score = models.IntegerField(default=0)
     away_score = models.IntegerField(default=0)
     date = models.DateField(default='2000-01-01')

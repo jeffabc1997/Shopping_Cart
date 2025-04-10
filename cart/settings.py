@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'paypal.standard.ipn',
     'paymentapp.apps.PaymentappConfig',
     'baseballapp.apps.BaseballappConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
