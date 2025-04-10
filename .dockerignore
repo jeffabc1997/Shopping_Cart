@@ -4,3 +4,4 @@
 *.pyc
 ./README.md
 ./Dockerfile
+db.sqlite3
