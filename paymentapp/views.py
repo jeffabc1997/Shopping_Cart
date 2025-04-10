@@ -66,8 +66,8 @@ def send_simple_message(mailto, mailsubject, mailcontent): #寄信
 	global message
 	strSmtp = "smtp.gmail.com:587"  #主機
 	# read the email and password from send_pass.txt
-	file1 = open(os.path.join(settings.BASE_DIR, "static", "send_pass.txt"), 'r')
-	list1 = file1.read().splitlines() # list1 裡面的每一個element就是file內的每一行內容，
+	# file1 = open(os.path.join(settings.BASE_DIR, "static", "send_pass.txt"), 'r')
+	# list1 = file1.read().splitlines() # list1 裡面的每一個element就是file內的每一行內容，
 
 	strAccount = eMAIL_HOST_USER #list1[0]  #帳號
 	strPassword = eMAIL_HOST_PASSWORD  #密碼
