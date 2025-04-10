@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   web:
@@ -6,7 +6,9 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - sqlite_data:/app/db.sqlite3  # Persist database file
+      - .:/app                 # 可熱更新原始碼（開發方便）
+      - sqlite_data:/app/db  # Volume 持久化資料庫
+
 
 volumes:
   sqlite_data:
