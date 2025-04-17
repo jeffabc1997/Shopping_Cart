@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-yg3@(tb*d#@*oq+v)2=h9w%dsc66_**^)&3zik$x8gbl)pbx@5
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+CSRF_TRUSTED_ORIGINS = ['https://*.ngrok-free.app']
 
 # Application definition
 
@@ -146,3 +146,26 @@ EMAIL_USE_TLS = True
 from .password import eMAIL_HOST_USER, eMAIL_HOST_PASSWORD
 EMAIL_HOST_USER = eMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = eMAIL_HOST_PASSWORD
+
+# 如果你有用環境變數，可以這樣寫
+BASE_URL = os.environ.get("BASE_URL", "http://localhost:8000")
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': { 'class': 'logging.StreamHandler' },
+    },
+    'loggers': {
+        'paypal.standard.ipn': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'paymentapp': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

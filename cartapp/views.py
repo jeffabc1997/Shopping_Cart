@@ -10,7 +10,7 @@ from cartapp.forms import RegistrationForm
 from cartapp.forms import CustomerInfoForm
 
 message = ''
-cartlist = []  #購買商品串列
+cartlist = []  #購買商品串列 [[name, price, qty, total], ...]
 customname = ''  #購買者姓名
 customphone = ''  #購買者電話
 customaddress = ''  #購買者地址

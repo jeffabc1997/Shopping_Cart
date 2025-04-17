@@ -8,17 +8,12 @@ import uuid
 from django.urls import reverse
 from cartapp import models
 from cartapp.forms import CustomerInfoForm
-import os
+from django.conf import settings
 from cart.password import eMAIL_HOST_USER, eMAIL_HOST_PASSWORD
 message = ''
 cartlist = []  #購買商品串列
 customname = ''  #購買者姓名
 customemail = ''  #購買者電子郵件
-
-# from django.http import HttpResponse 
-# def paymentapp(request):
-#     return HttpResponse('<h1>Payment App</h1>')
-
 
 def payment(request): # 按確認購買之後的畫面. 先用post 確認購買者資料，再進行付款
 	if request.method == 'POST':  #取得購買者資料
@@ -29,7 +24,8 @@ def payment(request): # 按確認購買之後的畫面. 先用post 確認購買�
 			total = 0
 			for unit in cartlist:
 				total += int(unit[3])
-			grandtotal = total + 100
+
+			grandtotal = total + 100 # 運費
 
 			customname = form.cleaned_data['name']
 			customphone = form.cleaned_data['phone']
@@ -38,21 +34,21 @@ def payment(request): # 按確認購買之後的畫面. 先用post 確認購買�
 			paytype = form.cleaned_data['paytype']
 			unitorder = models.OrdersModel.objects.create(subtotal=total, shipping=100, grandtotal=grandtotal, customname=customname, 
 							customphone=customphone, customaddress=customaddress, customemail=customemail, paytype=paytype, payment_completed=False) #建立訂單
-			host = request.get_host()
-			total_price = 100 # 運費
-			# print(f"http://{host}")
-			# print(f"http://{host}{reverse('payment-success', kwargs = {'orderid': unitorder.id})}")
-			for unit in cartlist:  # 記錄總價格
-				total_price += int(unit[1]) * int(unit[2])
+			# host = request.get_host()
+			# print(f"{settings.BASE_URL}{reverse('paypal-ipn')}")
+
+			for unit in cartlist:  
+				unitdetail = models.DetailModel.objects.create(dorder=unitorder, pname=unit[0], unitprice=unit[1], 
+												   				quantity=unit[2], dtotal=unit[3]) #建立和儲存訂單明細
 			paypal_checkout = {
 				'business': settings.PAYPAL_RECEIVER_EMAIL,
-				'amount': total_price,
+				'amount': grandtotal,
 				'item_name': "Good_item",
-				'invoice': uuid.uuid4(), # TODO need to change
+				'invoice': str(unitorder.id), # TODO need to change
 				'currency_code': 'TWD',
-				'notify_url': f"http://{host}{reverse('paypal-ipn')}",
-				'return_url': f"http://{host}{reverse('payment-success', kwargs = {'orderid': unitorder.id})}",
-				'cancel_url': f"http://{host}{reverse('payment-failed', kwargs = {'orderid': unitorder.id})}",
+				'notify_url': f"{settings.BASE_URL}{reverse('paypal-ipn')}",
+				'return_url': f"{settings.BASE_URL}{reverse('payment-success', kwargs = {'orderid': unitorder.id})}",
+				'cancel_url': f"{settings.BASE_URL}{reverse('payment-failed', kwargs = {'orderid': unitorder.id})}",
 			}
 
 			paypal_payment = PayPalPaymentsForm(initial=paypal_checkout)
@@ -96,12 +92,6 @@ def PaymentSuccessful(request, orderid): # TODO 使用cartok的方式在資料�
 	unitorder = models.OrdersModel.objects.filter(id=orderid).first()
 	if unitorder is None: #若訂單不存在
 		return redirect('/index/')
-	unitorder.payment_completed = True  #設定付款完成
-	unitorder.save()  #儲存訂單
-	
-	for unit in cartlist:  #將購買商品寫入資料庫
-		total = int(unit[1]) * int(unit[2])
-		unitdetail = models.DetailModel.objects.create(dorder=unitorder, pname=unit[0], unitprice=unit[1], quantity=unit[2], dtotal=total)
 	
 	cartlist = []
 	request.session['cartlist'] = cartlist #清空購物車
